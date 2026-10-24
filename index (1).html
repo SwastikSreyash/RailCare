@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RailCare — Your Journey, Reimagined</title>
+<style>
+/* ===== PART 1: CSS = how the page LOOKS (colours, sizes, spacing) ===== */
+/* Colours are named once here, then reused below. Change a value and the whole site updates. */
+:root{--navy:#0b2545;--blue:#1553b0;--yel:#ffc20e;--bg:#eaf0f6;--ink:#10223a;--mut:#455468;--ln:#c5d1de;
+--ok:#14663a;--okb:#e0f2e7;--wn:#7a4b00;--wnb:#fff0c2;--bad:#a6190d;--badb:#fde2de}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;font:18px/1.55 Frutiger,"Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2rem,6vw,3.3rem);font-weight:800}
+h2{font-size:clamp(1.5rem,4vw,2rem);margin-top:1.2em}
+h3{font-size:1.25rem}h4{font-size:1rem;margin:.9em 0 .2em}
+p{margin:0 0 .8em}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;background:#fff;padding:.5em 1em}.skip:focus{left:8px;top:8px;z-index:9}
+:focus-visible{outline:3px solid var(--yel);outline-offset:2px;box-shadow:0 0 0 6px var(--navy)}
+[tabindex="-1"]:focus{outline:0;box-shadow:none}
+.top{background:var(--navy);color:#fff}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding-top:8px;padding-bottom:4px}
+.brand{font-size:1.5rem;font-weight:800}
+nav{display:flex;flex-wrap:wrap;gap:4px}
+nav button{background:none;color:#fff;border:0;border-bottom:4px solid transparent;font:inherit;padding:.4em .8em;min-height:46px;cursor:pointer}
+nav button[aria-current]{border-bottom-color:var(--yel);font-weight:700}
+.notice{margin:0;background:var(--yel);color:var(--navy);padding:8px 16px;text-align:center;font-size:.95rem;font-weight:600}
+.hero{background:var(--navy);color:#fff;padding:44px 0 96px;position:relative}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:20px;height:14px;background:radial-gradient(circle,var(--yel) 3px,transparent 3.5px) 0 0/18px 14px repeat-x}
+.hero p{max-width:34em;font-size:1.15rem}
+.card{background:#fff;border:1px solid var(--ln);border-radius:10px;padding:20px;margin:0 0 16px}
+.search{margin-top:-64px;position:relative;box-shadow:0 8px 24px rgba(11,37,69,.25)}
+.fields{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:16px}
+label{display:block;font-weight:700;margin-bottom:4px}
+input{width:100%;font:inherit;padding:.6em .7em;border:2px solid var(--mut);border-radius:6px;min-height:48px}
+.btn{background:var(--blue);color:#fff;border:2px solid var(--blue);border-radius:8px;padding:.6em 1.3em;font:inherit;font-weight:700;min-height:48px;cursor:pointer}
+.btn.alt{background:#fff;color:var(--blue)}
+.btn.amber{background:#9a4a00;border-color:#9a4a00}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-bottom:16px}
+.grid .card{margin:0}
+.badge{display:inline-block;padding:.1em .6em;border-radius:6px;font-size:.88rem;font-weight:700;background:#e4e9f0;color:var(--mut)}
+.badge.ok{background:var(--okb);color:var(--ok)}.badge.wn{background:var(--wnb);color:var(--wn)}.badge.bad{background:var(--badb);color:var(--bad)}
+.alert{background:var(--badb);color:var(--bad);border:2px solid var(--bad);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-weight:600}
+.head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:10px}.head h3{margin:0}
+.s-ok{border-left:8px solid var(--ok)}.s-wn{border-left:8px solid #c27a00}.s-bad{border-left:8px solid var(--bad)}
+/* The departure-board look for each journey */
+.board{list-style:none;margin:0 0 16px;padding:6px 16px;background:var(--navy);color:#fff;border-radius:8px}
+.board li{display:grid;grid-template-columns:4.2em 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #2c4a73}
+.board li:last-child{border:0}
+.board b{color:var(--yel);font-variant-numeric:tabular-nums;font-size:1.1rem}
+.facts{display:grid;gap:10px 16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:0}
+.facts dt{font-size:.88rem;color:var(--mut);font-weight:700}.facts dd{margin:0}
+.why{border-top:2px dashed var(--ln);margin-top:16px;padding-top:4px}
+.why ol{margin:0;padding-left:1.3em}
+.rec{background:var(--okb);border-left:10px solid var(--ok)}
+.tw{overflow-x:auto;margin-bottom:16px}
+table{border-collapse:collapse;width:100%;min-width:680px;background:#fff}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--ln);vertical-align:top}
+thead th{background:var(--navy);color:#fff}
+footer{text-align:center;color:var(--mut);padding:28px 16px;font-size:.92rem}
+</style>
+</head>
+<body>
+<!-- ===== PART 2: HTML = the STRUCTURE of the page (headings, form, empty boxes to fill) ===== -->
+<a class="skip" href="#main">Skip to main content</a>
+<header class="top"><div class="wrap bar">
+  <div class="brand">RailCare</div>
+  <nav aria-label="Main menu" id="nav">
+    <button data-go="home" aria-current="page">Search</button>
+    <button data-go="journey">Journey</button>
+    <button data-go="replan">Re-plan</button>
+    <button data-go="tickets">Tickets</button>
+  </nav>
+</div></header>
+<p class="notice" role="note">Prototype: every train, price, delay and ticket status here is made-up sample data. Nothing is live or connected to a railway system.</p>
+
+<main id="main">
+  <!-- Screen 1: Home + search -->
+  <section id="home" class="screen">
+    <div class="hero"><div class="wrap">
+      <h1 tabindex="-1">RailCare — Your Journey, Reimagined</h1>
+      <p>Plan trips for the whole family, spot risky connections early, and get clear advice when a train runs late.</p>
+    </div></div>
+    <div class="wrap">
+      <form id="form" class="card search" aria-labelledby="fh">
+        <h2 id="fh" style="margin-top:0">Search a journey</h2>
+        <div class="fields">
+          <div><label for="from">From</label><input id="from" required value="Vijayawada"></div>
+          <div><label for="to">To</label><input id="to" required value="Bengaluru"></div>
+          <div><label for="date">Date</label><input id="date" type="date" required value="2026-11-14"></div>
+          <div><label for="pax">Passengers</label><input id="pax" type="number" min="1" max="9" required value="5"></div>
+        </div>
+        <button class="btn" type="submit">Search journeys</button>
+        <p style="margin:12px 0 0;color:var(--mut)">This prototype always shows the same sample journey, whatever you type.</p>
+      </form>
+      <div class="grid">
+        <div class="card"><h3>Plans for everyone</h3><p>Routes are judged against each traveller's needs, not just the fastest time.</p></div>
+        <div class="card"><h3>Honest about doubt</h3><p>Every suggestion says what is uncertain and what to do next.</p></div>
+        <div class="card"><h3>Calm when trains run late</h3><p>See a delay's effect on every passenger and compare new options side by side.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 2: Journey -->
+  <section id="journey" class="screen" hidden><div class="wrap">
+    <h2 tabindex="-1">Your sample journey</h2>
+    <p id="sum"></p>
+    <h3>Who is travelling</h3>
+    <div id="people" class="grid"></div>
+    <h3>Journey plan</h3>
+    <div id="banner" role="alert"></div>
+    <div id="orig"></div>
+    <div class="actions">
+      <button class="btn amber" id="delay">Simulate: delay the first train by 55 minutes</button>
+      <button class="btn" id="goplan" data-go="replan" hidden>See the smart re-plan</button>
+      <button class="btn alt" id="reset" hidden>Reset simulation</button>
+    </div>
+  </div></section>
+
+  <!-- Screen 3: Re-plan -->
+  <section id="replan" class="screen" hidden><div class="wrap">
+    <h2 tabindex="-1">Smart re-plan</h2>
+    <div id="plan"></div>
+  </div></section>
+
+  <!-- Screen 4: Tickets -->
+  <section id="tickets" class="screen" hidden><div class="wrap">
+    <h2 tabindex="-1">Tickets and refunds, passenger by passenger</h2>
+    <div id="tix" class="tw" role="region" tabindex="0" aria-label="Ticket table, scrolls sideways on small screens"></div>
+    <p>Statuses are sample data. This prototype does not calculate refund amounts or rules. Always confirm with the real railway before cancelling anything.</p>
+  </div></section>
+</main>
+<footer>RailCare is a hackathon prototype. Sample data only, not live information.</footer>
+
+<script>
+/* ===== PART 3: JAVASCRIPT = what the page DOES (reacts to clicks, fills in the boxes) ===== */
+
+// Small helpers. $("x") finds the element with id="x". bd() makes a coloured status label with an icon AND words,
+// so meaning never depends on colour alone.
+const $ = id => document.getElementById(id);
+const bd = (c, i, t) => `<span class="badge ${c}"><span aria-hidden="true">${i}</span> ${t}</span>`;
+let late = false;   // "late" remembers whether the delay simulation has been pressed
+
+// ---- SAMPLE DATA: the five travellers ----
+const people = [
+  {n:'Savitri', a:72, role:'Older passenger with limited mobility', need:'Needs a step-free route, wheelchair help at Chennai Central, a lower berth and no rushed walking.'},
+  {n:'Ravi', a:42, role:'Parent', need:'Carries luggage and manages the family bookings.'},
+  {n:'Meera', a:38, role:'Screen-reader user', need:'Needs clear text updates, nothing shown by colour alone, and platform directions in words.'},
+  {n:'Aarav', a:4, role:'Child under five', need:'Sits next to an adult, needs short walks, stroller space and rest breaks.'},
+  {n:'Isha', a:10, role:'Child', need:'Sits with the family and needs a seat near the group.'}
+];
+
+// ---- SAMPLE DATA: the original journey (changes when the delay is on) ----
+function orig() {
+  const start = ['06:00','S-101 leaves Vijayawada'];
+  if (late) return {id:'o', name:'Original plan: S-101 + S-202', tag:'Broken by the delay', tc:'bad', ti:'✕', arr:'Missed (S-202 leaves 12:10)',
+    route:[start,['12:25','S-101 reaches Chennai Central, 55 minutes late'],['12:10','S-202 leaves Chennai Central. It has already gone.'],['17:40','S-202 would reach Bengaluru. This will be missed.']],
+    price:'₹4,600', total:'No longer possible', transfer:'−15 min', status:'S-101 confirmed, S-202 at risk',
+    access:'Wheelchair help at Chennai was planned for 11:30', risk:'Very high', rc:'bad', ri:'✕',
+    why:'Not recommended. The first train now arrives after the second one has left, and Savitri needs extra time to walk between platforms.',
+    unsure:'S-202 might also run late, but nothing in the sample data says it will. Do not rely on that.',
+    next:['Do not rush across the station.','Ask station staff, or this app, for S-202 updates.','Pick one of the other options.']};
+  return {id:'o', name:'Original plan: S-101 + S-202', tag:'On schedule', tc:'wn', ti:'!', arr:'17:40',
+    route:[start,['11:30','S-101 reaches Chennai Central. Transfer time: 40 minutes.'],['12:10','S-202 leaves Chennai Central'],['17:40','S-202 reaches Bengaluru']],
+    price:'₹4,600', total:'11h 40m', transfer:'40 min', status:'All 5 confirmed',
+    access:'Step-free lift at Chennai Central, wheelchair help booked for Savitri', risk:'Medium, tight for Savitri', rc:'wn', ri:'!',
+    why:'Fastest plan, but 40 minutes is short for someone with limited mobility. A delay of even 10 minutes would make the connection hard.',
+    unsure:'Real delays cannot be predicted. That is why the connection is rated Medium, not Low.',
+    next:['Keep this plan for now.','Press the simulate button below to see what a 55-minute delay does.']};
+}
+
+// ---- SAMPLE DATA: the two alternatives offered after the delay ----
+function opts() {
+  const a = ['06:00','S-101 leaves Vijayawada'], b = ['12:25','S-101 reaches Chennai Central, 55 minutes late'];
+  return [
+    {id:'b', name:'Option B: wait for train S-204', tag:'Recommended', tc:'ok', ti:'✓', arr:'20:30',
+     route:[a,b,['15:00','S-204 leaves Chennai Central, after a 2h 35m wait'],['20:30','S-204 reaches Bengaluru']],
+     price:'About ₹4,600, fare difference unknown', total:'14h 30m', transfer:'2h 35m', status:'3 seats confirmed, 2 waitlisted (may change)',
+     access:'Step-free lift at Chennai Central. Wheelchair help must be re-booked.', risk:'Low', rc:'ok', ri:'✓',
+     why:'Arrives about 2h 50m later than planned, but the long gap lets Savitri move at her own pace and the children rest. A second missed connection is very unlikely, and everyone stays on rail.',
+     unsure:'Two seats are only waitlisted and may not confirm. Whether the S-202 fare is refunded or credited towards S-204 is not known here.',
+     next:['Choose this option.','Ask for wheelchair help for 12:25 at Chennai Central.','Keep the S-202 tickets until refund rules are confirmed.','If seats are still waitlisted at 14:00, switch to Option C.']},
+    {id:'c', name:'Option C: road for the last leg', tag:'Backup', tc:'wn', ti:'!', arr:'About 19:15',
+     route:[a,b,['12:45','Road vehicle leaves Chennai, after about 20 minutes to transfer'],['19:15','Arrives in Bengaluru (estimate)']],
+     price:'About ₹9,500 (estimate)', total:'13h 15m', transfer:'About 20 min', status:'Not booked yet',
+     access:'Vehicle access not checked', risk:'Medium', rc:'wn', ri:'!',
+     why:'Arrives about 1h 15m sooner than Option B, but costs roughly double, and a long road trip is tiring for a 72-year-old and a 4-year-old.',
+     unsure:'Road traffic, wheelchair access and child seats are unchecked. The price is only an estimate.',
+     next:['Use this only if the waitlisted seats in Option B do not confirm.','Ask for an accessible vehicle with a child seat before paying.']}
+  ];
+}
+
+// ---- Builds one journey card from one option's data ----
+function card(o) {
+  const li = a => a.map(x => `<li>${x}</li>`).join('');
+  return `<article class="card s-${o.rc}" aria-labelledby="h-${o.id}">
+    <div class="head"><h3 id="h-${o.id}">${o.name}</h3>${bd(o.tc, o.ti, o.tag)}</div>
+    <ol class="board">${o.route.map(r => `<li><b>${r[0]}</b><span>${r[1]}</span></li>`).join('')}</ol>
+    <dl class="facts">
+      <div><dt>Price for 5 people</dt><dd>${o.price}</dd></div>
+      <div><dt>Travel time</dt><dd>${o.total}</dd></div>
+      <div><dt>Transfer time</dt><dd>${o.transfer}</dd></div>
+      <div><dt>Booking status</dt><dd>${o.status}</dd></div>
+      <div><dt>Accessibility</dt><dd>${o.access}</dd></div>
+      <div><dt>Connection risk</dt><dd>${bd(o.rc, o.ri, o.risk)}</dd></div>
+    </dl>
+    <div class="why"><h4>Why</h4><p>${o.why}</p><h4>What is uncertain</h4><p>${o.unsure}</p><h4>What to do next</h4><ol>${li(o.next)}</ol></div>
+  </article>`;
+}
+
+// ---- Re-plan screen ----
+function plan() {
+  if (!late) {
+    $('plan').innerHTML = '<div class="card"><p>Nothing to re-plan yet. The sample journey is running on time.</p><button class="btn" data-go="journey">Go to Journey and simulate a delay</button></div>';
+    return;
+  }
+  const all = [orig(), ...opts()];
+  const row = o => `<tr><th scope="row">${o.name}</th><td>${o.arr}</td><td>${o.total}</td><td>${o.transfer}</td><td>${o.price}</td><td>${bd(o.rc, o.ri, o.risk)}</td></tr>`;
+  $('plan').innerHTML = `
+    <div class="card rec"><h3>RailCare recommends Option B: wait for train S-204</h3>
+      <p>It is the best balance of safety, comfort and cost for this family. You arrive at 20:30 instead of 17:40, but the 2h 35m gap at Chennai Central protects Savitri and the children from another rushed connection, and it costs far less than the road.</p>
+      <p>What we cannot promise: two of the five seats are only waitlisted. Option C is the backup if they do not confirm.</p></div>
+    <h3>Side-by-side comparison</h3>
+    <div class="tw" role="region" tabindex="0" aria-label="Comparison table, scrolls sideways on small screens">
+      <table><caption class="sr">Original plan compared with two alternatives</caption>
+      <thead><tr><th scope="col">Option</th><th scope="col">Arrives</th><th scope="col">Total time</th><th scope="col">Transfer</th><th scope="col">Price</th><th scope="col">Risk</th></tr></thead>
+      <tbody>${all.map(row).join('')}</tbody></table>
+    </div>
+    <h3>Each option explained</h3>${[all[1], all[2], all[0]].map(card).join('')}`;
+}
+
+// ---- Tickets screen ----
+function tix() {
+  const rows = people.map(p => {
+    const kid = p.a < 5;
+    const t1 = kid ? bd('ok','✓','Free child ticket') : bd('ok','✓','Confirmed' + (late ? ', running 55 min late' : ''));
+    const t2 = late ? bd('bad','✕','At risk, connection missed') : (kid ? bd('ok','✓','Free child ticket') : bd('ok','✓','Confirmed'));
+    const rf = kid ? bd('mu','–','No fare was paid') : late ? bd('wn','?','Not claimed yet. May be eligible, rules not checked') : bd('mu','–','Nothing to refund');
+    return `<tr><th scope="row">${p.n}, age ${p.a}<br><small>${p.role}</small></th><td>${t1}</td><td>${t2}</td><td>${rf}</td></tr>`;
+  }).join('');
+  return `<table><caption class="sr">Ticket and refund status for each passenger</caption>
+    <thead><tr><th scope="col">Passenger</th><th scope="col">S-101 Vijayawada to Chennai</th><th scope="col">S-202 Chennai to Bengaluru</th><th scope="col">Refund status</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+}
+
+// ---- Redraws everything that depends on the form or the delay ----
+function render() {
+  $('sum').textContent = `${$('from').value} to ${$('to').value}, ${$('date').value}, ${$('pax').value} passenger(s). Sample data only: this prototype always shows the same example, a family of five.`;
+  $('people').innerHTML = people.map(p => `<div class="card"><h4>${p.n}, age ${p.a}</h4><p><strong>${p.role}</strong></p><p>${p.need}</p></div>`).join('');
+  $('banner').innerHTML = late ? '<div class="alert">Simulated delay: train S-101 is 55 minutes late. It now reaches Chennai Central at 12:25, but S-202 leaves at 12:10. This is a simulation, not real news.</div>' : '';
+  $('orig').innerHTML = card(orig());
+  $('delay').hidden = late;
+  $('goplan').hidden = $('reset').hidden = !late;
+  plan();
+  $('tix').innerHTML = tix();
+}
+
+// ---- Switches between the four screens and moves keyboard/screen-reader focus to the new heading ----
+function go(name) {
+  document.querySelectorAll('.screen').forEach(s => s.hidden = s.id !== name);
+  document.querySelectorAll('#nav button').forEach(b => {
+    if (b.dataset.go === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  window.scrollTo(0, 0);
+  $(name).querySelector('h1,h2').focus();
+}
+
+// ---- Listens for clicks ----
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
+$('form').onsubmit = e => { e.preventDefault(); render(); go('journey'); };
+$('delay').onclick = () => { late = true; render(); $('goplan').focus(); };
+$('reset').onclick = () => { late = false; render(); $('delay').focus(); };
+
+render();   // fill the page when it first opens
+</script>
+</body>
+</html>
